@@ -11,7 +11,7 @@
   {
     "title": "Demo Mobile App",
     "description": "A high-performance mobile application built with modern frameworks to showcase technical expertise.",
-    "images": ["astro-02.jpeg", "#"],
+    "images": ["astro-01.webp", "astro-02.jpeg"],
     "tech": ["Flutter", "Dart", "REST API"],
     "platforms": ["apple-ios", "android"],
     "link": "https://github.com/nbakh16/career-portfolio-template",
