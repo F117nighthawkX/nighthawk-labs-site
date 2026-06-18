@@ -86,7 +86,7 @@ const defaultTheme = `${baseTheme}-dark`;
         const color = "var(--color-textrain)";
         
         const left = Math.random() * 100; 
-        const duration = 4 + Math.random() * 8; // 4s to 10s
+        const duration = 10 + Math.random() * 10; // 10s to 20s
         const size = 10 + Math.random() * 10; // 10px to 20px
         
         span.innerText = char;
@@ -109,7 +109,7 @@ const defaultTheme = `${baseTheme}-dark`;
 
       if (window.innerWidth > 768) {
         // one letter every 250ms
-        setInterval(createLetter, 250);
+        setInterval(createLetter, 400);
       } else {
         // Static scatter effect for mobile optimization
         const mobileCount = 20; 
