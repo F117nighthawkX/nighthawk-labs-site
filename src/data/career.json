@@ -1,26 +1,26 @@
 [
   {
-    "company": "Demo Company",
-    "role": "Lead Software Engineer",
-    "period": "Oct 2025 - Present",
-    "type": "Full time job",
-    "description": "Leading cross-platform mobile development using Flutter and FastAPI. Focused on scalable system design and high-performance data processing.",
-    "skills": ["Leading", "Collaboration"]
-  },
-  {
-    "company": "Demo Company",
+    "company": "Software Development Engineer @ Amazon Web Services",
     "role": "Full-stack Developer",
-    "period": "Sep 2023 - Sep 2025",
+    "period": "Feb 2023 - Jun 2025",
     "type": "Full time job",
-    "description": "Specializing in Business Research Methods and Strategic HRM. Applying analytical frameworks to human capital management.",
-    "skills": ["React", "Node.js", "PostgreSQL", "Docker"]
+    "description": "At AWS, I built and maintained internal web applications using REST APIs, React, TypeScript, Python, and AWS infrastructure. My work focused on improving usability, automating cloud workflows, optimizing build performance, and supporting production operations.",
+    "skills": ["React / TypeScript", "REST API Development", "AWS CDK", "CloudWatch / Production Monitoring", "Pipeline Optimization"]
   },
   {
-    "company": "Demo University of Tech",
+    "company": "SDE Intern @ AWS",
+    "role": "Full-stack Developer",
+    "period": "May 2022 - Aug 2022",
+    "type": "Internship",
+    "description": "As an AWS SDE intern, I built RESTful API endpoints for DynamoDB-backed workflows and developed a connected React UI for an internal application. I also worked with the team to clarify business logic and prepare the project for production deployment.",
+    "skills": ["React", "DynamoDB", "Internal Tooling", "Business Logic"]
+  },
+  {
+    "company": "Clemson University",
     "role": "BSc in Computer Science",
-    "period": "Jun 2020 - Jun 2024",
+    "period": "Dec 2022",
     "type": "Student",
-    "description": "Specializing in Business Research Methods and Strategic HRM. Applying analytical frameworks to human capital management.",
-    "skills": ["C++", "OOP", "Problem Solving"]
+    "description": "Favored courses: Cloud Computing, Data Structures and Algorithms, Game Design, Operating Systems.",
+    "skills": ["Python", "C++", "OOP", "Problem Solving"]
   }
 ]

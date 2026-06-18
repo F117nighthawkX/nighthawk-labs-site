@@ -1,25 +1,33 @@
 {
-  "name": "John Doe",
+  "name": "Kevin Hayes",
   "photoUrl": "favicon.svg",
   "intro": "A brief, compelling introduction about who you are and what you do. Mention your core philosophy, your passion for building digital products, and your drive for creating efficient, high-impact solutions.",
-  "introHtml": "A brief, compelling introduction about who you are and what you do. Mention your core <span class='text-white font-bold'>philosophy</span>, your passion for building digital products, and your drive for creating <span class='text-white font-bold'>efficient</span>, <span class='text-white font-bold'>high-impact</span> solutions.",
-  "webpageTitle": "John Doe",
-  "resumeUrl": "https://example-files.online-convert.com/document/pdf/example.pdf",
+  "introHtml": "As a <span class='text-white font-bold'>software developer</span> I focus on building <span class='text-white font-bold'>practical, user-centered digital products</span>. My work spans <span class='text-white font-bold'>web applications</span>, <span class='text-white font-bold'>REST APIs</span>, <span class='text-white font-bold'>cloud infrastructure</span>, <span class='text-white font-bold'>automation</span>, and <span class='text-white font-bold'>front-end performance</span>, with a strong focus on making software easier to use and easier to maintain. <br><br> I strive to <span class='text-white font-bold'>understand the user</span>, <span class='text-white font-bold'>build with purpose</span>, and <span class='text-white font-bold'>keep solutions clean enough to scale</span>. I’m driven by the challenge of turning complex problems into <span class='text-white font-bold'>efficient, high-impact tools</span> that create <span class='text-white font-bold'>real value</span> for people, helping them achieve their goals.",
+  "webpageTitle": "Kevin Hayes",
+  "resumeUrl": "https://docs.google.com/document/d/1aeKsHv_hufP_OJlTua3wOPJM3MtMY15V9SVAIIwSYQs/edit?usp=sharing",
 
   "_comment": "Add your social links below. Leave the 'url' empty to hide the icon. Set 'showInContact' to true or false to control if it appears in the Contact section.",
   "socials": [
     {
       "name": "GitHub",
-      "url": "https://github.com/[YOUR_USER_NAME]",
+      "url": "https://github.com/F117nighthawkX",
       "icon": "mdi:github",
       "showInContact": true
     },
     {
       "name": "LinkedIn",
-      "url": "https://linkedin.com/in/[YOUR_USER_NAME]",
+      "url": "https://linkedin.com/in/kevin-t-hayes",
       "icon": "mdi:linkedin",
       "showInContact": true
     },
+    {
+      "name": "Email",
+      "url": "mailto:kevinthayes94@gmail.com",
+      "icon": "mdi:email",
+      "showInContact": true
+    }
+  ],
+  "unused_socials": [
     {
       "name": "Leetcode",
       "url": "#",
@@ -31,12 +39,6 @@
       "url": "#",
       "icon": "devicon-plain:behance",
       "showInContact": false
-    },
-    {
-      "name": "Email",
-      "url": "mailto:your-mail@example.com",
-      "icon": "mdi:email",
-      "showInContact": true
     },
     {
       "name": "Whatsapp",
