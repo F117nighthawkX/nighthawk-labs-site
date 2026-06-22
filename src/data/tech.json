@@ -12,7 +12,7 @@
     {
       "title": "Backend",
       "skills": [
-        { "name": "RestAPI", "level": 2, "icon": "Dashicons:rest-api" },
+        { "name": "RestAPI", "level": 2, "icon": "mdi:api" },
         { "name": "TypeScript", "level": 2, "icon": "skill-icons:typescript" },
         { "name": "NestJS", "level": 1, "icon": "skill-icons:nestjs-dark" }
       ]
@@ -28,7 +28,7 @@
       "title": "Cloud",
       "skills": [
         { "name": "AWS", "level": 2, "icon": "skill-icons:aws-dark" },
-        { "name": "Docker", "level": 1, "icon": "streamline-logos:docker-logo-block" },
+        { "name": "Docker", "level": 1, "icon": "mdi:docker" },
         { "name": "Kubernetes", "level": 1, "icon": "skill-icons:kubernetes" }
       ]
     },

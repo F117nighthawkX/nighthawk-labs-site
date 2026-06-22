@@ -2,18 +2,18 @@
   {
     "title": "This Website",
     "description": "A high-performance, SEO-optimized web application built with modern frameworks to showcase my resume and portfolio.",
-    "images": ["astro-01.webp", "astro-02.jpeg"],
+    "images": ["card-website.webp", "card-website-github.webp"],
     "tech": ["Astro", "Tailwind"],
-    "platforms": ["web", "github"],
+    "platforms": ["mdi:web", "mdi:github", "simple-icons:cloudflare"],
     "link": "https://github.com/F117nighthawkX/nighthawk-labs-site",
     "category": "Published Website"
   },
   {
     "title": "Kube Pulse",
     "description": "A Go CLI that connects to a local Kubernetes cluster and summarizes workload health.",
-    "images": ["astro-01.webp", "astro-02.jpeg"],
+    "images": ["card-kube-pulse-terminal.webp", "card-kube-pulse-github.webp"],
     "tech": ["Kubernetes", "Docker", "Go"],
-    "platforms": ["docker", "terminal", "kubernetes"],
+    "platforms": ["mdi:docker", "mdi:terminal", "mdi:kubernetes"],
     "link": "https://github.com/F117nighthawkX/kube-pulse",
     "category": "Learning Project"
   }
