@@ -11,10 +11,19 @@
   {
     "title": "Kube Pulse",
     "description": "A Go CLI that connects to a local Kubernetes cluster and summarizes workload health.",
-    "images": ["card-kube-pulse-terminal.webp", "card-kube-pulse-github.webp"],
+    "images": ["card-kube-pulse-terminal.webp"],
     "tech": ["Kubernetes", "Docker", "Go"],
     "platforms": ["mdi:docker", "mdi:terminal", "mdi:kubernetes"],
     "link": "https://github.com/F117nighthawkX/kube-pulse",
     "category": "Learning Project"
+  },
+  {
+    "title": "Home Bar",
+    "description": "Home Bar is a native Android cocktail app shaped through structured AI prompts, from feature buckets to testing and implementation reports.",
+    "images": ["card-homebar.webp"],
+    "tech": ["Prompt Engineering", "Kotlin", "Android"],
+    "platforms": ["fluent:prompt-16-filled", "mdi:language-kotlin", "mdi:android"],
+    "link": "https://github.com/F117nighthawkX/homebar",
+    "category": "Experimentation"
   }
 ]
