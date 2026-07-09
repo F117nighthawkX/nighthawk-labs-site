@@ -1,6 +1,9 @@
 ---
 import ProjectCard from './project-card.astro';
 import projectsData from '../data/projects.json';
+
+const visibleProjects = projectsData.filter((project) => !(('_sample' in project) && project._sample));
+const featuredProjects = visibleProjects.slice(0, 3);
 ---
 
 <section id="projects" class="section-container overflow-hidden">
@@ -15,7 +18,7 @@ import projectsData from '../data/projects.json';
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {projectsData.map((project) => (
+      {featuredProjects.map((project) => (
         <ProjectCard project={project} />
       ))}
     </div>

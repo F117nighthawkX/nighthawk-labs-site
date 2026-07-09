@@ -1,39 +1,147 @@
 [
   {
+    "_sample": true,
+    "title": "Sample Project",
+    "slug": "sample-project",
+    "description": "Short card description used by the homepage Featured Projects cards.",
+    "images": ["sample-project.webp"],
+    "tech": ["Framework", "Language", "Tool"],
+    "platforms": ["mdi:web", "mdi:github"],
+    "link": "https://example.com",
+    "category": "Project Category",
+    "details": {
+      "summary": "One focused sentence that introduces the project on the dedicated /projects page.",
+      "role": "What you personally owned, contributed, designed, built, tested, or coordinated.",
+      "status": "Published, Prototype, In Progress, Archived, or another concise state.",
+      "timeline": "Year, date range, or project phase.",
+      "highlights": [
+        "Notable user-facing feature, engineering decision, or project outcome.",
+        "Another concise proof point that helps the project stand out."
+      ],
+      "technicalChallenges": [
+        "A hard implementation detail, tradeoff, constraint, or lesson learned.",
+        "Another challenge that shows technical judgment."
+      ],
+      "links": {
+        "Repository": "https://github.com/example/project",
+        "Demo": "https://example.com/demo",
+        "Documentation": "https://example.com/docs"
+      }
+    }
+  },
+  {
     "title": "This Website",
+    "slug": "nighthawk-labs-site",
     "description": "A high-performance, SEO-optimized web application built with modern frameworks to showcase my resume and portfolio.",
     "images": ["card-website.webp", "card-website-github.webp"],
     "tech": ["Astro", "Tailwind"],
     "platforms": ["mdi:web", "mdi:github", "simple-icons:cloudflare"],
     "link": "https://github.com/F117nighthawkX/nighthawk-labs-site",
-    "category": "Published Website"
+    "category": "Published Website",
+    "details": {
+      "summary": "A fast, SEO-focused portfolio site built with Astro and Tailwind to showcase my resume, projects, technical skills, and contact paths in one polished web experience.",
+      "role": "Customized an existing Astro portfolio template to fit my content, branding, project structure, and deployment needs. I also configured a Cloudflare Worker workflow so the live site automatically rebuilds and updates when changes are pushed to the repository.",
+      "status": "Published",
+      "timeline": "2026",
+      "highlights": [
+        "Data-driven content keeps profile, career, tech, and project sections easy to update.",
+        "Astro and Tailwind support a fast static site with reusable section components.",
+        "Theme-aware styling and optimized local assets keep the portfolio polished across viewports."
+      ],
+      "technicalChallenges": [
+        "Adapting the existing template without overcomplicating the site structure.",
+        "Keeping resume, project, and technical content easy to maintain through local data files.",
+        "Setting up an automated deployment flow from GitHub to the live Cloudflare-hosted site."
+      ],
+      "links": {
+        "Repository": "https://github.com/F117nighthawkX/nighthawk-labs-site"
+      }
+    }
   },
   {
     "title": "Kube Pulse",
+    "slug": "kube-pulse",
     "description": "A Go CLI that connects to a local Kubernetes cluster and summarizes workload health.",
     "images": ["card-kube-pulse-terminal.webp"],
     "tech": ["Kubernetes", "Docker", "Go"],
     "platforms": ["mdi:docker", "mdi:terminal", "mdi:kubernetes"],
     "link": "https://github.com/F117nighthawkX/kube-pulse",
-    "category": "Learning Project"
+    "category": "Learning Project",
+    "details": {
+      "summary": "A lightweight Go CLI that connects to a local Kubernetes cluster and turns workload health data into a clear terminal summary for faster inspection and triage.",
+      "role": "Built the CLI workflow, connected it to local Kubernetes data, and shaped the output around quick workload triage.",
+      "status": "Learning Project",
+      "timeline": "2026",
+      "highlights": [
+        "Uses Go to keep the CLI implementation small, direct, and portable.",
+        "Focuses on local Kubernetes clusters where fast feedback and clear terminal output matter.",
+        "Frames workload health as a concise summary instead of raw cluster data."
+      ],
+      "technicalChallenges": [
+        "Choosing the right level of detail so the output is useful without becoming noisy.",
+        "Working with Kubernetes concepts through a CLI-focused learning project."
+      ],
+      "links": {
+        "Repository": "https://github.com/F117nighthawkX/kube-pulse"
+      }
+    }
   },
   {
     "title": "Home Bar",
+    "slug": "homebar",
     "description": "Home Bar is a native Android cocktail app shaped through structured AI prompts, from feature buckets to testing and implementation reports.",
     "images": ["card-homebar.webp"],
     "tech": ["Prompt Engineering", "Kotlin", "Android"],
     "platforms": ["fluent:prompt-16-filled", "mdi:language-kotlin", "mdi:android"],
     "link": "https://github.com/F117nighthawkX/homebar",
-    "category": "Experimentation"
+    "category": "Experimentation",
+    "details": {
+      "summary": "A native Android cocktail app experiment that uses structured AI prompts to move from feature buckets and planning into tested Kotlin implementation work.",
+      "role": "Defined prompt workflows, organized feature buckets, reviewed implementation reports, and guided Kotlin Android changes.",
+      "status": "Experimentation",
+      "timeline": "2026",
+      "highlights": [
+        "Uses structured AI prompts as part of the planning and implementation workflow.",
+        "Explores how feature buckets can keep mobile app scope clear before coding starts.",
+        "Connects implementation work back to testing and completion reports."
+      ],
+      "technicalChallenges": [
+        "Keeping AI-assisted changes narrow enough to review, test, and iterate safely.",
+        "Maintaining native Android project quality while using prompts to accelerate planning and implementation.",
+        "Translating prompt outputs into concrete Kotlin UI and behavior changes."
+      ],
+      "links": {
+        "Repository": "https://github.com/F117nighthawkX/homebar"
+      }
+    }
   },
   {
-  "title": "Agentikit",
-  "slug": "agentikit",
-  "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer, coding-agent work across repositories.",
-  "images": ["card-agentikit.webp"],
-  "tech": ["Python", "Machine Learning"],
-  "platforms": ["fluent:prompt-16-filled", "mdi:brain"],
-  "link": "https://github.com/F117nighthawkX/agentikit",
-  "category": "Research"
+    "title": "Agentikit",
+    "slug": "agentikit",
+    "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer, coding-agent work across repositories.",
+    "images": ["card-agentikit.webp"],
+    "tech": ["Python", "Machine Learning"],
+    "platforms": ["fluent:prompt-16-filled", "mdi:brain"],
+    "link": "https://github.com/F117nighthawkX/agentikit",
+    "category": "Research",
+    "details": {
+      "summary": "A reusable coding-agent workflow kit that packages AGENTS.md rules, workflow skills, and guidance docs to make agent-assisted development clearer, safer, and easier to repeat across repositories.",
+      "role": "Authored the repository guidance, workflow skills, and supporting documentation patterns for repeatable agent collaboration.",
+      "status": "Research",
+      "timeline": "2026",
+      "highlights": [
+        "Packages AGENTS.md guidance so repository expectations are explicit before coding starts.",
+        "Provides workflow skills for planning, long tasks, and completion reporting.",
+        "Focuses on safer, clearer coding-agent work across repositories."
+      ],
+      "technicalChallenges": [
+        "Making guidance specific enough to be useful without forcing every repository into the same workflow.",
+        "Separating durable project rules from task-specific plans and temporary handoff notes.",
+        "Designing instructions that improve agent behavior while staying practical for day-to-day development."
+      ],
+      "links": {
+        "Repository": "https://github.com/F117nighthawkX/agentikit"
+      }
+    }
   }
 ]

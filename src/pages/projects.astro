@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { Icon } from 'astro-icon/components';
+import Layout from '../layouts/Layout.astro';
+import projectsData from '../data/projects.json';
+import { resolveAssetImage } from '../utils/images';
+
+interface ProjectDetails {
+  summary?: string;
+  role?: string;
+  status?: string;
+  timeline?: string;
+  highlights?: string[];
+  technicalChallenges?: string[];
+  links?: Record<string, string>;
+}
+
+interface Project {
+  _sample?: boolean;
+  title: string;
+  slug: string;
+  description: string;
+  images: string[];
+  tech: string[];
+  platforms: string[];
+  link: string;
+  category: string;
+  details?: ProjectDetails;
+}
+
+interface ProjectWithImages extends Project {
+  resolvedImages: ImageMetadata[];
+}
+
+const visibleProjects = (projectsData as Project[]).filter((project) => !project._sample);
+
+const slugCounts = visibleProjects.reduce<Record<string, number>>((counts, project) => {
+  counts[project.slug] = (counts[project.slug] ?? 0) + 1;
+  return counts;
+}, {});
+
+const invalidSlugs = Object.entries(slugCounts)
+  .filter(([slug, count]) => slug.trim() === '' || count > 1)
+  .map(([slug]) => slug);
+
+if (invalidSlugs.length > 0) {
+  throw new Error(`Project slugs must be unique and non-empty: ${invalidSlugs.join(', ')}`);
+}
+
+const projects: ProjectWithImages[] = await Promise.all(
+  visibleProjects.map(async (project) => {
+    const resolvedImages = (
+      await Promise.all(project.images.map((imageName) => resolveAssetImage(imageName)))
+    ).filter((image): image is ImageMetadata => Boolean(image));
+
+    return {
+      ...project,
+      resolvedImages,
+    };
+  }),
+);
+---
+
+<Layout title="Projects | Nighthawk Labs">
+  <a
+    href="/"
+    class="fixed top-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-accent/20 bg-background/80 px-4 py-2 text-sm font-body text-maintext shadow-xl backdrop-blur-md transition-all duration-300 hover:border-accent/50 hover:bg-accent/10"
+  >
+    <Icon name="mdi:arrow-left" class="h-4 w-4 text-accent" />
+    <span>Back</span>
+  </a>
+
+  <section class="section-container min-h-[45vh] flex items-end pt-28 md:pt-36">
+    <div class="showcase-header max-w-3xl">
+      <p class="mb-4 text-[11px] font-body uppercase tracking-[0.4em] text-accent">
+        Portfolio
+      </p>
+      <h1 class="font-heading text-4xl font-bold tracking-tight text-maintext md:text-6xl">
+        <span class="text-accent">/</span> Projects
+      </h1>
+      <p class="mt-5 max-w-2xl text-base leading-relaxed text-subtext md:text-lg">
+        A fuller view of professional work, published apps, learning projects, and experiments.
+      </p>
+    </div>
+  </section>
+
+  <div class="space-y-8 md:space-y-16">
+    {projects.map((project) => {
+      const hasImages = project.resolvedImages.length > 0;
+      //const isReversed = index % 2 !== 0;
+      const isReversed = false; // Disable alternating layout for now
+      const details = project.details;
+      const hasDetailStats = Boolean(details?.role || details?.status || details?.timeline);
+      const detailLinks = Object.entries(details?.links ?? {})
+        .filter(([label]) => label.toLowerCase() !== 'repository');
+      const hasDetailLists = Boolean(details?.highlights?.length || details?.technicalChallenges?.length);
+
+      return (
+        <section
+          id={project.slug}
+          class="project-showcase-section section-container scroll-mt-6 overflow-hidden"
+        >
+          <div class={`project-layout grid gap-8 rounded-2xl border border-accent/10 bg-accent/5 p-5 backdrop-blur-sm md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 ${isReversed ? 'is-reversed' : ''}`}>
+            <div class="project-copy flex flex-col justify-center">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-accent">
+                {project.category}
+              </span>
+
+              <div class="mt-3 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <h2 class="font-heading text-3xl font-bold text-maintext md:text-4xl">
+                    {project.title}
+                  </h2>
+                  <a
+                    href={`/projects#${project.slug}`}
+                    class="mt-2 inline-flex text-xs font-body text-subtext transition-colors hover:text-accent"
+                    aria-label={`Link to ${project.title} section`}
+                  >
+                    /projects#{project.slug}
+                  </a>
+                </div>
+
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex shrink-0 items-center gap-2 rounded-full border border-accent/20 bg-background/60 px-4 py-2 text-sm text-maintext transition-all hover:border-accent/50 hover:bg-accent/10"
+                >
+                  <span>Repo</span>
+                  <Icon name="mdi:github" class="h-4 w-4 text-accent" />
+                </a>
+              </div>
+
+              {details?.summary && (
+                <p class="mt-4 max-w-2xl border-l border-accent/30 pl-4 text-sm leading-7 text-maintext/90 md:text-base">
+                  {details.summary}
+                </p>
+              )}
+
+              {hasDetailStats && (
+                <div class="mt-8 grid gap-3 md:grid-cols-3 md:items-stretch">
+                  {details?.role && (
+                    <div class="rounded-lg border border-accent/10 bg-background/50 p-4 md:col-span-2">
+                      <span class="text-[10px] font-bold uppercase tracking-widest text-accent">
+                        Role
+                      </span>
+                      <p class="mt-2 text-sm leading-6 text-maintext">
+                        {details.role}
+                      </p>
+                    </div>
+                  )}
+
+                  {(details?.status || details?.timeline) && (
+                    <div class="flex h-full flex-col gap-3">
+                      {details?.status && (
+                        <div class="flex-1 rounded-lg border border-accent/10 bg-background/50 p-4">
+                          <span class="text-[10px] font-bold uppercase tracking-widest text-accent">
+                            Status
+                          </span>
+                          <p class="mt-2 text-sm leading-6 text-maintext">
+                            {details.status}
+                          </p>
+                        </div>
+                      )}
+
+                      {details?.timeline && (
+                        <div class="flex-1 rounded-lg border border-accent/10 bg-background/50 p-4">
+                          <span class="text-[10px] font-bold uppercase tracking-widest text-accent">
+                            Timeline
+                          </span>
+                          <p class="mt-2 text-sm leading-6 text-maintext">
+                            {details.timeline}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {hasDetailLists && (
+                <div class="mt-8 grid gap-6 md:grid-cols-2">
+                  {details?.highlights?.length && (
+                    <div>
+                      <h3 class="text-[11px] font-body uppercase tracking-[0.35em] text-maintext">
+                        Highlights
+                      </h3>
+                      <ul class="mt-4 space-y-3">
+                        {details.highlights.map((highlight) => (
+                          <li class="flex gap-3 text-sm leading-6 text-subtext">
+                            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {details?.technicalChallenges?.length && (
+                    <div>
+                      <h3 class="text-[11px] font-body uppercase tracking-[0.35em] text-maintext">
+                        Technical Challenges
+                      </h3>
+                      <ul class="mt-4 space-y-3">
+                        {details.technicalChallenges.map((challenge) => (
+                          <li class="flex gap-3 text-sm leading-6 text-subtext">
+                            <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+                            <span>{challenge}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div class="mt-8 flex flex-wrap gap-3">
+                {project.platforms.map((platform) => (
+                  <div class="flex items-center gap-2 rounded-lg border border-accent/10 bg-background/50 px-3 py-2 text-maintext">
+                    <Icon name={platform} class="h-4 w-4 text-accent" />
+                  </div>
+                ))}
+              </div>
+
+              <div class="mt-6 flex flex-wrap gap-2">
+                {project.tech.map((tech) => (
+                  <span class="rounded-md border border-accent/10 bg-accent/5 px-3 py-1 text-[10px] text-accent/90 md:px-4">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              {detailLinks.length > 0 && (
+                <div class="mt-8 flex flex-wrap gap-3">
+                  {detailLinks.map(([label, href]) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-background/50 px-4 py-2 text-sm text-maintext transition-all hover:border-accent/50 hover:bg-accent/10"
+                    >
+                      <span>{label}</span>
+                      <Icon name="mdi:open-in-new" class="h-4 w-4 text-accent" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div class="project-media min-w-0">
+              {hasImages ? (
+                <div class={`grid gap-4 ${project.resolvedImages.length > 1 ? 'md:grid-cols-2 lg:grid-cols-1' : ''}`}>
+                  {project.resolvedImages.map((image, imageIndex) => (
+                    <div class={`group relative overflow-hidden rounded-xl border border-accent/10 bg-background/50 ${imageIndex === 0 ? 'md:col-span-2 lg:col-span-1' : ''}`}>
+                      <Image
+                        src={image}
+                        alt={`${project.title} screenshot ${imageIndex + 1}`}
+                        class="aspect-video w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div class="pointer-events-none absolute inset-0 bg-accent/10 transition-colors group-hover:bg-transparent"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div class="relative overflow-hidden rounded-xl border border-accent/10 bg-background/50">
+                  <img
+                    src="/placeholder.jpeg"
+                    alt={`${project.title} placeholder`}
+                    class="aspect-video w-full object-cover"
+                  />
+                  <div class="pointer-events-none absolute inset-0 bg-accent/10"></div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</Layout>
+
+<style>
+  .showcase-header,
+  .project-showcase-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .showcase-header.reveal,
+  .project-showcase-section.reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (min-width: 1024px) {
+    .project-layout.is-reversed .project-copy {
+      order: 2;
+    }
+
+    .project-layout.is-reversed .project-media {
+      order: 1;
+    }
+  }
+</style>
+
+<script>
+  const revealProjectShowcase = () => {
+    const targets = document.querySelectorAll('.showcase-header, .project-showcase-section');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -10px 0px',
+    });
+
+    targets.forEach((target) => observer.observe(target));
+  };
+
+  window.addEventListener('load', revealProjectShowcase);
+  document.addEventListener('astro:after-swap', revealProjectShowcase);
+</script>
