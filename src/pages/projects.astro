@@ -98,10 +98,9 @@ const projects: ProjectWithImages[] = await Promise.all(
 
       return (
         <section
-          id={project.slug}
-          class="project-showcase-section section-container scroll-mt-6 overflow-hidden"
+          class="project-showcase-section section-container overflow-hidden"
         >
-          <div class={`project-layout grid gap-8 rounded-2xl border border-accent/10 bg-accent/5 p-5 backdrop-blur-sm md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 ${isReversed ? 'is-reversed' : ''}`}>
+          <div id={project.slug} class={`project-layout scroll-mt-16 grid gap-8 rounded-2xl border border-accent/10 bg-accent/5 p-5 backdrop-blur-sm md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 ${isReversed ? 'is-reversed' : ''}`}>
             <div class="project-copy flex flex-col justify-center">
               <span class="text-[10px] font-bold uppercase tracking-widest text-accent">
                 {project.category}
