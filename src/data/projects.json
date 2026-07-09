@@ -29,10 +29,10 @@
   {
   "title": "Agentikit",
   "slug": "agentikit",
-  "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer coding-agent work across repositories.",
+  "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer, coding-agent work across repositories.",
   "images": ["card-agentikit.webp"],
   "tech": ["Python", "Machine Learning"],
-  "platforms": ["mdi:language-python", "mdi:brain"],
+  "platforms": ["fluent:prompt-16-filled", "mdi:brain"],
   "link": "https://github.com/F117nighthawkX/agentikit",
   "category": "Research"
   }
