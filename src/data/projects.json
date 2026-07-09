@@ -25,5 +25,15 @@
     "platforms": ["fluent:prompt-16-filled", "mdi:language-kotlin", "mdi:android"],
     "link": "https://github.com/F117nighthawkX/homebar",
     "category": "Experimentation"
+  },
+  {
+  "title": "Agentikit",
+  "slug": "agentikit",
+  "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer coding-agent work across repositories.",
+  "images": ["card-agentikit.webp"],
+  "tech": ["Python", "Machine Learning"],
+  "platforms": ["mdi:language-python", "mdi:brain"],
+  "link": "https://github.com/F117nighthawkX/agentikit",
+  "category": "Research"
   }
 ]
