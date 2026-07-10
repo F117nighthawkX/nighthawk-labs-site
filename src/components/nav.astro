@@ -1,10 +1,18 @@
 ---
 import { Icon } from 'astro-icon/components';
 import ThemeToggle from './theme-toggle.astro';
-interface NavItem {
+interface DropdownItem {
   label: string;
   href: string;
   icon: string;
+}
+
+interface NavItem {
+  label: string;
+  icon: string;
+  href?: string;
+  activeSectionId?: string;
+  dropdownItems?: DropdownItem[];
 }
 
 const navItems: NavItem[] = [
@@ -20,8 +28,20 @@ const navItems: NavItem[] = [
   },
   {
     label: "Projects",
-    href: "#projects",
     icon: `mdi:computer`,
+    activeSectionId: "projects",
+    dropdownItems: [
+      {
+        label: "Featured Projects",
+        href: "#projects",
+        icon: "rivet-icons:pin", //mdi:star, material-symbols:important-devices-outline
+      },
+      {
+        label: "All Projects",
+        href: "/projects",
+        icon: "mdi:view-dashboard",
+      },
+    ],
   },
   {
     label: "Tech",
@@ -55,21 +75,70 @@ const navItems: NavItem[] = [
       >
         {
           navItems.map((item) => (
-            <li class="flex-1 md:flex-none">
-              <a
-                href={item.href}
-                class="flex flex-col items-center gap-1 text-accent transition-colors text-xs md:text-base relative group"
-              >
-                <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300 scale-0 opacity-0 nav-indicator hidden md:block" />
-                <span class="md:hidden flex items-center justify-center w-6 h-6">
-                  <Icon 
-                    name={item.icon} 
-                    class="nav-icon w-full h-full text-accent/50 group-hover:text-accent transition-colors duration-300" 
-                  />
-                </span>
-                <span class="hidden md:inline-block">{item.label}</span>
-                <span class="md:hidden text-xs">{item.label}</span>
-              </a>
+            <li class={`flex-1 md:flex-none ${item.dropdownItems ? 'nav-dropdown' : ''}`} data-nav-dropdown={item.dropdownItems ? '' : undefined}>
+              {item.dropdownItems ? (
+                <div class="relative flex w-full justify-center">
+                  <button
+                    type="button"
+                    class="nav-link nav-dropdown-trigger flex flex-col items-center gap-1 text-accent transition-colors text-xs md:text-base relative group"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    aria-controls="projects-nav-menu"
+                    data-nav-dropdown-trigger
+                    data-nav-section={item.activeSectionId}
+                  >
+                    <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300 scale-0 opacity-0 nav-indicator hidden md:block" />
+                    <span class="md:hidden flex items-center justify-center w-6 h-6">
+                      <Icon
+                        name={item.icon}
+                        class="nav-icon w-full h-full text-accent/50 group-hover:text-accent transition-colors duration-300"
+                      />
+                    </span>
+                    <span class="hidden md:inline-flex items-center gap-1">
+                      <span>{item.label}</span>
+                      <Icon name="mdi:chevron-down" class="dropdown-chevron h-4 w-4 transition-transform duration-300" />
+                    </span>
+                    <span class="md:hidden inline-flex items-center gap-0.5 text-xs">
+                      <span>{item.label}</span>
+                      <Icon name="mdi:chevron-up" class="dropdown-chevron h-3 w-3 transition-transform duration-300" />
+                    </span>
+                  </button>
+
+                  <div
+                    id="projects-nav-menu"
+                    class="nav-dropdown-menu hidden absolute left-1/2 top-full z-30 mt-4 w-52 -translate-x-1/2 rounded-xl border border-accent/20 bg-background/95 p-2 shadow-xl shadow-background/30 backdrop-blur-md"
+                    role="menu"
+                    data-nav-dropdown-menu
+                  >
+                    {item.dropdownItems.map((dropdownItem) => (
+                      <a
+                        href={dropdownItem.href}
+                        class="nav-dropdown-link flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-maintext transition-colors hover:bg-accent/10 hover:text-accent focus-visible:bg-accent/10 focus-visible:text-accent focus-visible:outline-none"
+                        role="menuitem"
+                      >
+                        <Icon name={dropdownItem.icon} class="h-4 w-4 shrink-0 text-accent" />
+                        <span>{dropdownItem.label}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <a
+                  href={item.href}
+                  class="nav-link flex flex-col items-center gap-1 text-accent transition-colors text-xs md:text-base relative group"
+                  data-nav-section={item.href?.startsWith("#") ? item.href.substring(1) : undefined}
+                >
+                  <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full transition-all duration-300 scale-0 opacity-0 nav-indicator hidden md:block" />
+                  <span class="md:hidden flex items-center justify-center w-6 h-6">
+                    <Icon
+                      name={item.icon}
+                      class="nav-icon w-full h-full text-accent/50 group-hover:text-accent transition-colors duration-300"
+                    />
+                  </span>
+                  <span class="hidden md:inline-block">{item.label}</span>
+                  <span class="md:hidden text-xs">{item.label}</span>
+                </a>
+              )}
             </li>
           ))
         }
@@ -112,25 +181,33 @@ const navItems: NavItem[] = [
     backdrop-filter: blur(10px);
   }
 
-  nav a.active .nav-indicator {
+  .nav-link.active .nav-indicator {
     transform: translateY(-50%) scale(1);
     opacity: 0;
   }
 
   /* Base state for the link text */
-  nav a {
+  .nav-link {
     transition: transform 0.3s ease, color 0.3s ease, font-weight 0.3s ease;
   }
 
+  button.nav-link {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+  }
+
   /* Active state */
-  nav a.active {
+  .nav-link.active {
     color: var(--color-maintext) !important;
     font-weight: 700;
     transform: scale(1.1);
   }
 
   /* Glow effect */
-  nav a.active span {
+  .nav-link.active span {
     text-shadow: 0 0 10px color-mix(in srgb, var(--color-maintext) 30%, transparent);
   }
 
@@ -146,10 +223,27 @@ const navItems: NavItem[] = [
     transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
   }
 
-  nav a.active .nav-icon {
+  .nav-link.active .nav-icon {
     color: var(--color-maintext) !important;
     transform: scale(1.2);
     filter: drop-shadow(0 0 8px var(--color-maintext));
+  }
+
+  .nav-dropdown-trigger[aria-expanded="true"] .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .nav-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -6px;
+    width: 10px;
+    height: 10px;
+    transform: translateX(-50%) rotate(45deg);
+    border-left: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    background-color: color-mix(in srgb, var(--color-background) 95%, transparent);
   }
 
   @media (max-width: 767px) {
@@ -192,6 +286,22 @@ const navItems: NavItem[] = [
       backdrop-filter: blur(0px);
     }
 
+    .nav-dropdown-menu {
+      top: auto;
+      bottom: calc(100% + 1.5rem);
+      margin-top: 0;
+      width: 13rem;
+    }
+
+    .nav-dropdown-menu::before {
+      top: auto;
+      bottom: -6px;
+      border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+      border-left: 0;
+      border-top: 0;
+      border-right: 1px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
+    }
+
     /* Hiding theme-toggle while scroling on mobile */
     #theme-toggle-wrapper {
       will-change: transform;
@@ -204,16 +314,16 @@ const navItems: NavItem[] = [
   }
 
   /* Hover effect */
-  nav a:not(.active):hover {
+  .nav-link:not(.active):hover {
     color: var(--color-maintext) !important;
   }
 
-  nav a:not(.active):hover span {
+  .nav-link:not(.active):hover span {
     transform: scale(0.95);
     text-shadow: 0 0 15px var(--color-accent-60);
   }
   
-  nav a:not(.active):hover .nav-icon {
+  .nav-link:not(.active):hover .nav-icon {
     transform: scale(0.95);
     color: var(--color-maintext) !important;
   }
@@ -255,8 +365,9 @@ const navItems: NavItem[] = [
       // nav?.style.setProperty("width", "80%");
     }
     if (window.innerWidth < 768) {
+      const isDropdownOpen = document.querySelector<HTMLButtonElement>("[data-nav-dropdown-trigger]")?.getAttribute("aria-expanded") === "true";
       // Small buffer (e.g. 10px) to prevent accidental hiding on "jittery" scrolls
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+      if (currentScrollY > lastScrollY && currentScrollY > 50 && !isDropdownOpen) {
         // Scrolling Down - Hide Nav & theme-toggle
         nav?.classList.add("nav-hidden");
         themeWrapper?.classList.add("theme-hidden");
@@ -281,6 +392,92 @@ const navItems: NavItem[] = [
     { passive: true }
   );
 
+  function initProjectsDropdown() {
+    const dropdown = document.querySelector<HTMLElement>("[data-nav-dropdown]");
+    const trigger = document.querySelector<HTMLButtonElement>("[data-nav-dropdown-trigger]");
+    const menu = document.querySelector<HTMLElement>("[data-nav-dropdown-menu]");
+    const dropdownWindow = window as Window & { projectsNavDropdownController?: AbortController };
+
+    dropdownWindow.projectsNavDropdownController?.abort();
+
+    if (!dropdown || !trigger || !menu) return;
+
+    const controller = new AbortController();
+    dropdownWindow.projectsNavDropdownController = controller;
+
+    const closeDropdown = (shouldFocusTrigger = false) => {
+      trigger.setAttribute("aria-expanded", "false");
+      menu.classList.add("hidden");
+      if (shouldFocusTrigger) trigger.focus();
+    };
+
+    const openDropdown = () => {
+      trigger.setAttribute("aria-expanded", "true");
+      menu.classList.remove("hidden");
+      nav?.classList.remove("nav-hidden");
+      themeWrapper?.classList.remove("theme-hidden");
+    };
+
+    const toggleDropdown = () => {
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      if (isOpen) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    };
+
+    trigger.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+        toggleDropdown();
+      },
+      { signal: controller.signal }
+    );
+
+    menu.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+      },
+      { signal: controller.signal }
+    );
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener(
+        "click",
+        () => {
+          closeDropdown();
+        },
+        { signal: controller.signal }
+      );
+    });
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (!dropdown.contains(event.target as Node)) {
+          closeDropdown();
+        }
+      },
+      { signal: controller.signal }
+    );
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape" && trigger.getAttribute("aria-expanded") === "true") {
+          closeDropdown(true);
+        }
+      },
+      { signal: controller.signal }
+    );
+  }
+
+  initProjectsDropdown();
+  document.addEventListener("astro:after-swap", initProjectsDropdown);
+
   //smooth scrolling to a linked section
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
@@ -299,7 +496,7 @@ const navItems: NavItem[] = [
   //highlight section by observing visible one on the screen by 50%
   document.addEventListener("DOMContentLoaded", () => {
     const sections = document.querySelectorAll("section[id]");
-    const navLinks = document.querySelectorAll("nav a[href^='#']");
+    const navLinks = document.querySelectorAll("[data-nav-section]");
     const observerOptions = { threshold: 0.5 };
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -307,7 +504,7 @@ const navItems: NavItem[] = [
         if (entry.isIntersecting) {
           navLinks.forEach((link) => link.classList.remove("active"));
           const id = entry.target.getAttribute("id");
-          const activeLink = document.querySelector(`nav a[href="#${id}"]`);
+          const activeLink = document.querySelector(`[data-nav-section="${id}"]`);
           if (activeLink) {
             activeLink.classList.add("active");
           }
