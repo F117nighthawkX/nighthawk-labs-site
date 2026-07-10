@@ -35,18 +35,23 @@
 </style>
 
 <script>
-  const themeToggle = document.getElementById('theme-toggle');
+  const themeWindow = window as Window & { nighthawkThemeToggleInitialized?: boolean };
 
-  themeToggle?.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'default-dark';
-    
-    const isDark = currentTheme.endsWith('-dark');
-    
-    const newTheme = isDark 
-    ? currentTheme.replace('-dark', '-light') 
-    : currentTheme.replace('-light', '-dark');
+  if (!themeWindow.nighthawkThemeToggleInitialized) {
+    themeWindow.nighthawkThemeToggleInitialized = true;
 
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
+    document.addEventListener('click', (event) => {
+      const target = event.target as Element | null;
+      if (!target?.closest('#theme-toggle')) return;
+
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'default-dark';
+      const isDark = currentTheme.endsWith('-dark');
+      const newTheme = isDark
+        ? currentTheme.replace('-dark', '-light')
+        : currentTheme.replace('-light', '-dark');
+
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  }
 </script>

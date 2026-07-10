@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { Icon } from 'astro-icon/components';
 import Layout from '../layouts/Layout.astro';
+import ThemeToggle from '../components/theme-toggle.astro';
 import projectsData from '../data/projects.json';
 import { resolveAssetImage } from '../utils/images';
 
@@ -70,6 +71,10 @@ const projects: ProjectWithImages[] = await Promise.all(
     <Icon name="mdi:arrow-left" class="h-4 w-4 text-accent" />
     <span>Back</span>
   </a>
+
+  <div class="fixed top-4 right-4 z-50">
+    <ThemeToggle />
+  </div>
 
   <section class="section-container min-h-[45vh] flex items-end pt-28 md:pt-36">
     <div class="showcase-header max-w-3xl">

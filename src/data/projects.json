@@ -120,13 +120,13 @@
     "slug": "agentikit",
     "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer, coding-agent work across repositories.",
     "images": ["card-agentikit.webp"],
-    "tech": ["Python", "Machine Learning"],
+    "tech": ["Prompt Engineering", "Developer Tooling", "Workflow Design"],
     "platforms": ["fluent:prompt-16-filled", "mdi:brain"],
     "link": "https://github.com/F117nighthawkX/agentikit",
     "category": "Research",
     "details": {
       "summary": "A reusable coding-agent workflow kit that packages AGENTS.md rules, workflow skills, and guidance docs to make agent-assisted development clearer, safer, and easier to repeat across repositories.",
-      "role": "Authored the repository guidance, workflow skills, and supporting documentation patterns for repeatable agent collaboration.",
+      "role": "Crafted and refined the repository guidance, workflow skills, and supporting documentation patterns for repeatable agent collaboration.",
       "status": "Research",
       "timeline": "2026",
       "highlights": [
