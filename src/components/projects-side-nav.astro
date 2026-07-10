@@ -19,23 +19,31 @@ const { projects } = Astro.props;
   data-projects-side-nav
   aria-label="Project sections"
 >
-  <ul class="project-nav__list">
-    {projects.map((project) => (
-      <li>
-        <a
-          href={`#${project.slug}`}
-          class="project-nav__link"
-          data-project-link
-          data-project-slug={project.slug}
-          aria-label={`Go to ${project.title}`}
-          title={project.title}
-        >
-          <Icon name={project.icon} class="project-nav__icon" />
-          <span class="project-nav__label">{project.title}</span>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <div class="project-nav__bubble" data-project-bubble aria-hidden="true" hidden>
+    <span data-project-bubble-label></span>
+    <span class="project-nav__bubble-connector"></span>
+  </div>
+
+  <div class="project-nav__scroller" data-project-scroller>
+    <ul class="project-nav__list">
+      {projects.map((project) => (
+        <li>
+          <a
+            href={`#${project.slug}`}
+            class="project-nav__link"
+            data-project-link
+            data-project-slug={project.slug}
+            data-project-title={project.title}
+            aria-label={`Go to ${project.title}`}
+            title={project.title}
+          >
+            <Icon name={project.icon} class="project-nav__icon" />
+            <span class="project-nav__label">{project.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 </nav>
 
 <style>
@@ -46,8 +54,6 @@ const { projects } = Astro.props;
     z-index: 40;
     max-height: calc(100dvh - 7rem);
     padding: 0.375rem;
-    overflow-y: auto;
-    overflow-x: hidden;
     color: var(--color-subtext);
     background-color: color-mix(in srgb, var(--color-background), transparent 20%);
     border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
@@ -59,6 +65,12 @@ const { projects } = Astro.props;
     transition: border-color 0.3s ease, background-color 0.3s ease;
     user-select: none;
     -webkit-user-select: none;
+  }
+
+  .project-nav__scroller {
+    max-height: calc(100dvh - 7.75rem);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .project-nav__list {
@@ -136,6 +148,116 @@ const { projects } = Astro.props;
     cursor: ns-resize;
   }
 
+  .project-nav__bubble {
+    display: none;
+  }
+
+  .project-nav__bubble[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .project-nav {
+      --bubble-x: 50%;
+      --bubble-connector-x: 50%;
+      top: auto;
+      right: max(0.5rem, env(safe-area-inset-right));
+      bottom: max(0.5rem, env(safe-area-inset-bottom));
+      left: max(0.5rem, env(safe-area-inset-left));
+      width: auto;
+      max-height: none;
+      transform: none;
+      border-radius: 1rem;
+    }
+
+    .project-nav__scroller {
+      width: 100%;
+      max-height: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
+      scrollbar-width: none;
+      touch-action: pan-x pan-y;
+    }
+
+    .project-nav__scroller::-webkit-scrollbar {
+      display: none;
+    }
+
+    .project-nav__list {
+      width: max-content;
+      min-width: 100%;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .project-nav__link {
+      touch-action: pan-x pan-y;
+    }
+
+    .project-nav.is-expanded .project-nav__label {
+      max-width: 0;
+      margin-left: 0;
+      opacity: 0;
+    }
+
+    .project-nav.is-scrubbing {
+      cursor: ew-resize;
+    }
+
+    .project-nav__bubble {
+      position: absolute;
+      bottom: calc(100% + 0.75rem);
+      left: var(--bubble-x);
+      display: block;
+      max-width: min(15rem, calc(100vw - 2rem));
+      padding: 0.5rem 0.75rem;
+      overflow: visible;
+      color: var(--color-maintext);
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      line-height: 1.25rem;
+      text-align: center;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      background-color: color-mix(in srgb, var(--color-background), transparent 8%);
+      border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+      border-radius: 0.75rem;
+      box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--color-background) 45%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, 0.35rem) scale(0.96);
+      transform-origin: bottom center;
+      transition: opacity 0.15s ease, transform 0.15s ease, left 0.12s ease;
+    }
+
+    .project-nav.is-scrubbing .project-nav__bubble {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .project-nav__bubble-connector {
+      position: absolute;
+      top: calc(100% - 0.25rem);
+      left: var(--bubble-connector-x);
+      width: 0.75rem;
+      height: 0.75rem;
+      background-color: color-mix(in srgb, var(--color-background), transparent 8%);
+      border-right: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    .project-nav__bubble > span:first-child {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   @media (min-width: 1280px) {
     .project-nav {
       left: max(1rem, env(safe-area-inset-left));
@@ -151,7 +273,8 @@ const { projects } = Astro.props;
   @media (prefers-reduced-motion: reduce) {
     .project-nav,
     .project-nav__link,
-    .project-nav__label {
+    .project-nav__label,
+    .project-nav__bubble {
       transition: none;
     }
   }
@@ -171,28 +294,38 @@ const { projects } = Astro.props;
     const nav = document.querySelector<HTMLElement>('[data-projects-side-nav]');
     if (!nav) return;
 
+    const scroller = nav.querySelector<HTMLElement>('[data-project-scroller]');
+    const bubble = nav.querySelector<HTMLElement>('[data-project-bubble]');
+    const bubbleLabel = nav.querySelector<HTMLElement>('[data-project-bubble-label]');
     const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-project-link]'));
     const targets = links
       .map((link) => document.getElementById(link.dataset.projectSlug ?? ''))
       .filter((target): target is HTMLElement => Boolean(target));
-    if (links.length === 0 || targets.length !== links.length) return;
+    if (!scroller || !bubble || !bubbleLabel || links.length === 0 || targets.length !== links.length) return;
 
     const controller = new AbortController();
     const { signal } = controller;
     projectsSideNavWindow.projectsSideNavController = controller;
 
+    const mobileQuery = window.matchMedia('(max-width: 767px)');
     const compactQuery = window.matchMedia('(max-width: 1279px)');
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const holdDelay = 150;
     const movementTolerance = 10;
+    const autoScrollSpeed = 180;
     let holdTimer: number | undefined;
     let originX = 0;
     let originY = 0;
+    let currentClientX = 0;
+    let currentClientY = 0;
     let gestureLink: HTMLAnchorElement | null = null;
     let pendingLink: HTMLAnchorElement | null = null;
     let isHolding = false;
     let suppressClickUntil = 0;
     let scrollFrame: number | null = null;
+    let autoScrollFrame: number | null = null;
+    let autoScrollDirection = 0;
+    let autoScrollLastTime = 0;
 
     const clearHoldTimer = () => {
       if (holdTimer !== undefined) {
@@ -201,18 +334,56 @@ const { projects } = Astro.props;
       }
     };
 
+    const stopAutoScroll = () => {
+      if (autoScrollFrame !== null) cancelAnimationFrame(autoScrollFrame);
+      autoScrollFrame = null;
+      autoScrollDirection = 0;
+      autoScrollLastTime = 0;
+    };
+
+    const updateBubble = (link: HTMLAnchorElement) => {
+      if (!mobileQuery.matches || bubble.hidden) return;
+
+      bubbleLabel.textContent = link.dataset.projectTitle ?? '';
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const iconCenter = linkRect.left + (linkRect.width / 2) - navRect.left;
+      const bubbleWidth = bubble.offsetWidth;
+      const minimumCenter = (bubbleWidth / 2) + 8;
+      const maximumCenter = navRect.width - (bubbleWidth / 2) - 8;
+      const bubbleCenter = Math.min(Math.max(iconCenter, minimumCenter), maximumCenter);
+      const connectorPosition = Math.min(
+        Math.max(iconCenter - bubbleCenter + (bubbleWidth / 2), 10),
+        bubbleWidth - 10,
+      );
+
+      nav.style.setProperty('--bubble-x', `${bubbleCenter}px`);
+      nav.style.setProperty('--bubble-connector-x', `${connectorPosition}px`);
+    };
+
     const setPendingLink = (link: HTMLAnchorElement | null) => {
-      pendingLink?.classList.remove('is-pending');
-      pendingLink = link;
-      pendingLink?.classList.add('is-pending');
+      if (pendingLink !== link) {
+        pendingLink?.classList.remove('is-pending');
+        pendingLink = link;
+        pendingLink?.classList.add('is-pending');
+      }
+      if (link && isHolding) updateBubble(link);
     };
 
     const resetGesture = () => {
       clearHoldTimer();
+      stopAutoScroll();
       setPendingLink(null);
       gestureLink = null;
       isHolding = false;
+      bubble.hidden = true;
+      bubbleLabel.textContent = '';
       nav.classList.remove('is-expanded', 'is-scrubbing');
+    };
+
+    const cancelPendingGesture = () => {
+      suppressClickUntil = performance.now() + 700;
+      resetGesture();
     };
 
     const updatePendingFromPoint = (clientX: number, clientY: number) => {
@@ -222,15 +393,84 @@ const { projects } = Astro.props;
       if (link && nav.contains(link)) setPendingLink(link);
     };
 
+    const runAutoScroll = (time: number) => {
+      autoScrollFrame = null;
+      if (!isHolding || !mobileQuery.matches || autoScrollDirection === 0) {
+        stopAutoScroll();
+        return;
+      }
+
+      const maximumScroll = scroller.scrollWidth - scroller.clientWidth;
+      const elapsed = autoScrollLastTime === 0 ? 16 : Math.min(time - autoScrollLastTime, 32);
+      const nextScroll = Math.min(
+        Math.max(scroller.scrollLeft + ((autoScrollSpeed * elapsed / 1000) * autoScrollDirection), 0),
+        maximumScroll,
+      );
+
+      if (Math.abs(nextScroll - scroller.scrollLeft) < 0.1) {
+        stopAutoScroll();
+        return;
+      }
+
+      scroller.scrollLeft = nextScroll;
+      autoScrollLastTime = time;
+      updatePendingFromPoint(currentClientX, currentClientY);
+      autoScrollFrame = requestAnimationFrame(runAutoScroll);
+    };
+
+    const updateAutoScroll = (clientX: number) => {
+      if (!isHolding || !mobileQuery.matches) {
+        stopAutoScroll();
+        return;
+      }
+
+      const scrollerRect = scroller.getBoundingClientRect();
+      const edgeSize = Math.min(52, scrollerRect.width * 0.2);
+      const maximumScroll = scroller.scrollWidth - scroller.clientWidth;
+      let nextDirection = 0;
+
+      if (clientX <= scrollerRect.left + edgeSize && scroller.scrollLeft > 0) {
+        nextDirection = -1;
+      } else if (
+        clientX >= scrollerRect.right - edgeSize
+        && scroller.scrollLeft < maximumScroll
+      ) {
+        nextDirection = 1;
+      }
+
+      if (nextDirection === 0) {
+        stopAutoScroll();
+        return;
+      }
+
+      if (autoScrollDirection !== nextDirection) autoScrollLastTime = 0;
+      autoScrollDirection = nextDirection;
+      if (autoScrollFrame === null) autoScrollFrame = requestAnimationFrame(runAutoScroll);
+    };
+
+    const updateHeldGesture = (clientX: number, clientY: number) => {
+      currentClientX = clientX;
+      currentClientY = clientY;
+      updatePendingFromPoint(clientX, clientY);
+      updateAutoScroll(clientX);
+    };
+
     const beginGesture = (link: HTMLAnchorElement, clientX: number, clientY: number) => {
       resetGesture();
       gestureLink = link;
       originX = clientX;
       originY = clientY;
+      currentClientX = clientX;
+      currentClientY = clientY;
       holdTimer = window.setTimeout(() => {
         if (!gestureLink || !compactQuery.matches) return;
         isHolding = true;
-        nav.classList.add('is-expanded', 'is-scrubbing');
+        if (mobileQuery.matches) {
+          bubble.hidden = false;
+        } else {
+          nav.classList.add('is-expanded');
+        }
+        nav.classList.add('is-scrubbing');
         setPendingLink(gestureLink);
       }, holdDelay);
     };
@@ -317,12 +557,12 @@ const { projects } = Astro.props;
     nav.addEventListener('pointermove', (event) => {
       if (event.pointerType === 'touch' || !gestureLink) return;
       if (!isHolding && movedPastTolerance(event.clientX, event.clientY)) {
-        resetGesture();
+        cancelPendingGesture();
         return;
       }
       if (!isHolding) return;
       event.preventDefault();
-      updatePendingFromPoint(event.clientX, event.clientY);
+      updateHeldGesture(event.clientX, event.clientY);
     }, { signal });
 
     nav.addEventListener('pointerup', (event) => {
@@ -339,6 +579,10 @@ const { projects } = Astro.props;
       if (event.pointerType !== 'touch') resetGesture();
     }, { signal });
 
+    nav.addEventListener('lostpointercapture', (event) => {
+      if ((event as PointerEvent).pointerType !== 'touch' && gestureLink) resetGesture();
+    }, { signal });
+
     nav.addEventListener('touchstart', (event) => {
       if (event.touches.length !== 1 || !compactQuery.matches) return;
       const link = (event.target as Element).closest<HTMLAnchorElement>('[data-project-link]');
@@ -351,12 +595,12 @@ const { projects } = Astro.props;
       if (!gestureLink || event.touches.length !== 1) return;
       const touch = event.touches[0];
       if (!isHolding && movedPastTolerance(touch.clientX, touch.clientY)) {
-        resetGesture();
+        cancelPendingGesture();
         return;
       }
       if (!isHolding) return;
       event.preventDefault();
-      updatePendingFromPoint(touch.clientX, touch.clientY);
+      updateHeldGesture(touch.clientX, touch.clientY);
     }, { signal, passive: false });
 
     nav.addEventListener('touchend', (event) => {
@@ -367,6 +611,12 @@ const { projects } = Astro.props;
 
     nav.addEventListener('touchcancel', resetGesture, { signal });
 
+    scroller.addEventListener('scroll', () => {
+      if (isHolding && mobileQuery.matches) {
+        updatePendingFromPoint(currentClientX, currentClientY);
+      }
+    }, { signal, passive: true });
+
     window.addEventListener('scroll', queueActiveProjectUpdate, { signal, passive: true });
     window.addEventListener('resize', () => {
       resetGesture();
@@ -374,6 +624,7 @@ const { projects } = Astro.props;
     }, { signal, passive: true });
     window.addEventListener('hashchange', queueActiveProjectUpdate, { signal });
     window.addEventListener('popstate', queueActiveProjectUpdate, { signal });
+    mobileQuery.addEventListener('change', resetGesture, { signal });
     signal.addEventListener('abort', () => {
       resetGesture();
       if (scrollFrame !== null) cancelAnimationFrame(scrollFrame);

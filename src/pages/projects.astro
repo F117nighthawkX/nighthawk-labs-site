@@ -316,9 +316,13 @@ const projectNavItems = projects.map(({ title, slug, icon }) => ({ title, slug, 
     }
   }
 
-  @media (max-width: 639px) {
+  @media (max-width: 767px) {
     .projects-page-content {
-      padding-left: 2.75rem;
+      padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+    }
+
+    :global(#to-top) {
+      bottom: calc(8rem + env(safe-area-inset-bottom));
     }
   }
 
