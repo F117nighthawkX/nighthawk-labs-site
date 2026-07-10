@@ -258,6 +258,36 @@ const { projects } = Astro.props;
     }
   }
 
+  @media (min-width: 768px) and (max-width: 1279px) {
+    .project-nav {
+      width: 3.625rem;
+    }
+
+    .project-nav.is-expanded {
+      width: auto;
+      max-width: calc(100vw - 1rem);
+      padding-right: 0.5rem;
+    }
+
+    .project-nav__scroller,
+    .project-nav__link {
+      width: 100%;
+    }
+
+    .project-nav.is-expanded .project-nav__scroller {
+      padding-right: 0.1rem;
+    }
+    
+    .project-nav.is-expanded .project-nav__list {
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .project-nav.is-expanded .project-nav__label {
+      max-width: none;
+    }
+  }
+
   @media (min-width: 1280px) {
     .project-nav {
       left: max(1rem, env(safe-area-inset-left));
