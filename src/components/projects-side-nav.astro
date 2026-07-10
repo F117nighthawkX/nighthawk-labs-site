@@ -1,0 +1,391 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface ProjectNavItem {
+  title: string;
+  slug: string;
+  icon: string;
+}
+
+interface Props {
+  projects: ProjectNavItem[];
+}
+
+const { projects } = Astro.props;
+---
+
+<nav
+  class="project-nav"
+  data-projects-side-nav
+  aria-label="Project sections"
+>
+  <ul class="project-nav__list">
+    {projects.map((project) => (
+      <li>
+        <a
+          href={`#${project.slug}`}
+          class="project-nav__link"
+          data-project-link
+          data-project-slug={project.slug}
+          aria-label={`Go to ${project.title}`}
+          title={project.title}
+        >
+          <Icon name={project.icon} class="project-nav__icon" />
+          <span class="project-nav__label">{project.title}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .project-nav {
+    position: fixed;
+    top: 50%;
+    left: max(0.5rem, env(safe-area-inset-left));
+    z-index: 40;
+    max-height: calc(100dvh - 7rem);
+    padding: 0.375rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    color: var(--color-subtext);
+    background-color: color-mix(in srgb, var(--color-background), transparent 20%);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    border-radius: 1rem;
+    box-shadow: 0 1.25rem 3rem color-mix(in srgb, var(--color-background) 45%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transform: translateY(-50%);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .project-nav__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .project-nav__link {
+    display: flex;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+    padding: 0.625rem;
+    overflow: hidden;
+    color: var(--color-subtext);
+    border: 1px solid transparent;
+    border-radius: 0.75rem;
+    transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    touch-action: pan-y;
+  }
+
+  .project-nav__link:hover {
+    color: var(--color-maintext);
+    background-color: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  }
+
+  .project-nav__link:focus-visible {
+    color: var(--color-maintext);
+    border-color: var(--color-accent);
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+    outline-offset: 2px;
+  }
+
+  .project-nav__link[aria-current='location'] {
+    color: var(--color-maintext);
+    background-color: color-mix(in srgb, var(--color-accent) 16%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  }
+
+  .project-nav__link.is-pending {
+    color: var(--color-maintext);
+    background-color: color-mix(in srgb, var(--color-accent) 26%, transparent);
+    border-color: var(--color-accent);
+    transform: translateX(0.125rem);
+  }
+
+  .project-nav__icon {
+    width: 1.375rem;
+    height: 1.375rem;
+    flex: 0 0 auto;
+    color: var(--color-accent);
+  }
+
+  .project-nav__label {
+    max-width: 0;
+    margin-left: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: max-width 0.3s ease, margin-left 0.3s ease, opacity 0.2s ease;
+  }
+
+  .project-nav.is-expanded .project-nav__label {
+    max-width: 10rem;
+    margin-left: 0.625rem;
+    opacity: 1;
+  }
+
+  .project-nav.is-scrubbing {
+    cursor: ns-resize;
+  }
+
+  @media (min-width: 1280px) {
+    .project-nav {
+      left: max(1rem, env(safe-area-inset-left));
+    }
+
+    .project-nav__label {
+      max-width: 10rem;
+      margin-left: 0.625rem;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-nav,
+    .project-nav__link,
+    .project-nav__label {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  interface ProjectsSideNavWindow extends Window {
+    projectsSideNavController?: AbortController;
+    projectsSideNavLifecycleBound?: boolean;
+  }
+
+  const projectsSideNavWindow = window as ProjectsSideNavWindow;
+
+  function initProjectsSideNav() {
+    projectsSideNavWindow.projectsSideNavController?.abort();
+
+    const nav = document.querySelector<HTMLElement>('[data-projects-side-nav]');
+    if (!nav) return;
+
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-project-link]'));
+    const targets = links
+      .map((link) => document.getElementById(link.dataset.projectSlug ?? ''))
+      .filter((target): target is HTMLElement => Boolean(target));
+    if (links.length === 0 || targets.length !== links.length) return;
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    projectsSideNavWindow.projectsSideNavController = controller;
+
+    const compactQuery = window.matchMedia('(max-width: 1279px)');
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const holdDelay = 150;
+    const movementTolerance = 10;
+    let holdTimer: number | undefined;
+    let originX = 0;
+    let originY = 0;
+    let gestureLink: HTMLAnchorElement | null = null;
+    let pendingLink: HTMLAnchorElement | null = null;
+    let isHolding = false;
+    let suppressClickUntil = 0;
+    let scrollFrame: number | null = null;
+
+    const clearHoldTimer = () => {
+      if (holdTimer !== undefined) {
+        window.clearTimeout(holdTimer);
+        holdTimer = undefined;
+      }
+    };
+
+    const setPendingLink = (link: HTMLAnchorElement | null) => {
+      pendingLink?.classList.remove('is-pending');
+      pendingLink = link;
+      pendingLink?.classList.add('is-pending');
+    };
+
+    const resetGesture = () => {
+      clearHoldTimer();
+      setPendingLink(null);
+      gestureLink = null;
+      isHolding = false;
+      nav.classList.remove('is-expanded', 'is-scrubbing');
+    };
+
+    const updatePendingFromPoint = (clientX: number, clientY: number) => {
+      const link = document
+        .elementFromPoint(clientX, clientY)
+        ?.closest<HTMLAnchorElement>('[data-project-link]');
+      if (link && nav.contains(link)) setPendingLink(link);
+    };
+
+    const beginGesture = (link: HTMLAnchorElement, clientX: number, clientY: number) => {
+      resetGesture();
+      gestureLink = link;
+      originX = clientX;
+      originY = clientY;
+      holdTimer = window.setTimeout(() => {
+        if (!gestureLink || !compactQuery.matches) return;
+        isHolding = true;
+        nav.classList.add('is-expanded', 'is-scrubbing');
+        setPendingLink(gestureLink);
+      }, holdDelay);
+    };
+
+    const movedPastTolerance = (clientX: number, clientY: number) => (
+      Math.hypot(clientX - originX, clientY - originY) > movementTolerance
+    );
+
+    const updateActiveProject = () => {
+      scrollFrame = null;
+      const activationLine = Number.parseFloat(getComputedStyle(targets[0]).scrollMarginTop) || 64;
+      let activeIndex = -1;
+
+      targets.forEach((target, index) => {
+        if (target.getBoundingClientRect().top <= activationLine + 1) activeIndex = index;
+      });
+
+      links.forEach((link, index) => {
+        if (index === activeIndex) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    const queueActiveProjectUpdate = () => {
+      if (scrollFrame === null) scrollFrame = requestAnimationFrame(updateActiveProject);
+    };
+
+    const navigateToLink = (link: HTMLAnchorElement) => {
+      const target = document.getElementById(link.dataset.projectSlug ?? '');
+      if (!target) return;
+
+      const nextHash = `#${encodeURIComponent(target.id)}`;
+      if (window.location.hash !== nextHash) history.pushState(null, '', nextHash);
+      target.scrollIntoView({
+        behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
+        block: 'start',
+      });
+      queueActiveProjectUpdate();
+    };
+
+    const finishGesture = () => {
+      const selectedLink = isHolding ? pendingLink : null;
+      const completedHold = isHolding;
+      resetGesture();
+      if (completedHold && selectedLink) {
+        suppressClickUntil = performance.now() + 700;
+        navigateToLink(selectedLink);
+      }
+      return completedHold;
+    };
+
+    nav.addEventListener('click', (event) => {
+      const link = (event.target as Element).closest<HTMLAnchorElement>('[data-project-link]');
+      if (!link) return;
+      event.preventDefault();
+      if (performance.now() < suppressClickUntil) return;
+      navigateToLink(link);
+    }, { signal });
+
+    nav.addEventListener('keydown', (event) => {
+      if (event.key !== ' ') return;
+      const link = (event.target as Element).closest<HTMLAnchorElement>('[data-project-link]');
+      if (!link) return;
+      event.preventDefault();
+      navigateToLink(link);
+    }, { signal });
+
+    nav.addEventListener('dragstart', (event) => event.preventDefault(), { signal });
+    nav.addEventListener('contextmenu', (event) => {
+      if (isHolding) event.preventDefault();
+    }, { signal });
+
+    nav.addEventListener('pointerdown', (event) => {
+      if (event.pointerType === 'touch' || event.button !== 0 || !compactQuery.matches) return;
+      const link = (event.target as Element).closest<HTMLAnchorElement>('[data-project-link]');
+      if (!link) return;
+      beginGesture(link, event.clientX, event.clientY);
+      link.setPointerCapture(event.pointerId);
+    }, { signal });
+
+    nav.addEventListener('pointermove', (event) => {
+      if (event.pointerType === 'touch' || !gestureLink) return;
+      if (!isHolding && movedPastTolerance(event.clientX, event.clientY)) {
+        resetGesture();
+        return;
+      }
+      if (!isHolding) return;
+      event.preventDefault();
+      updatePendingFromPoint(event.clientX, event.clientY);
+    }, { signal });
+
+    nav.addEventListener('pointerup', (event) => {
+      if (event.pointerType === 'touch' || !gestureLink) return;
+      const completedHold = finishGesture();
+      if (completedHold) event.preventDefault();
+      const captureTarget = event.target as Element;
+      if (captureTarget.hasPointerCapture?.(event.pointerId)) {
+        captureTarget.releasePointerCapture(event.pointerId);
+      }
+    }, { signal });
+
+    nav.addEventListener('pointercancel', (event) => {
+      if (event.pointerType !== 'touch') resetGesture();
+    }, { signal });
+
+    nav.addEventListener('touchstart', (event) => {
+      if (event.touches.length !== 1 || !compactQuery.matches) return;
+      const link = (event.target as Element).closest<HTMLAnchorElement>('[data-project-link]');
+      if (!link) return;
+      const touch = event.touches[0];
+      beginGesture(link, touch.clientX, touch.clientY);
+    }, { signal, passive: true });
+
+    nav.addEventListener('touchmove', (event) => {
+      if (!gestureLink || event.touches.length !== 1) return;
+      const touch = event.touches[0];
+      if (!isHolding && movedPastTolerance(touch.clientX, touch.clientY)) {
+        resetGesture();
+        return;
+      }
+      if (!isHolding) return;
+      event.preventDefault();
+      updatePendingFromPoint(touch.clientX, touch.clientY);
+    }, { signal, passive: false });
+
+    nav.addEventListener('touchend', (event) => {
+      if (!gestureLink) return;
+      const completedHold = finishGesture();
+      if (completedHold) event.preventDefault();
+    }, { signal });
+
+    nav.addEventListener('touchcancel', resetGesture, { signal });
+
+    window.addEventListener('scroll', queueActiveProjectUpdate, { signal, passive: true });
+    window.addEventListener('resize', () => {
+      resetGesture();
+      queueActiveProjectUpdate();
+    }, { signal, passive: true });
+    window.addEventListener('hashchange', queueActiveProjectUpdate, { signal });
+    window.addEventListener('popstate', queueActiveProjectUpdate, { signal });
+    signal.addEventListener('abort', () => {
+      resetGesture();
+      if (scrollFrame !== null) cancelAnimationFrame(scrollFrame);
+    }, { once: true });
+
+    queueActiveProjectUpdate();
+  }
+
+  if (!projectsSideNavWindow.projectsSideNavLifecycleBound) {
+    document.addEventListener('astro:after-swap', initProjectsSideNav);
+    projectsSideNavWindow.projectsSideNavLifecycleBound = true;
+  }
+
+  initProjectsSideNav();
+</script>

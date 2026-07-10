@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { Icon } from 'astro-icon/components';
 import Layout from '../layouts/Layout.astro';
+import ProjectsSideNav from '../components/projects-side-nav.astro';
 import ThemeToggle from '../components/theme-toggle.astro';
 import projectsData from '../data/projects.json';
 import { resolveAssetImage } from '../utils/images';
@@ -21,6 +22,7 @@ interface Project {
   _sample?: boolean;
   title: string;
   slug: string;
+  icon: string;
   description: string;
   images: string[];
   tech: string[];
@@ -61,6 +63,8 @@ const projects: ProjectWithImages[] = await Promise.all(
     };
   }),
 );
+
+const projectNavItems = projects.map(({ title, slug, icon }) => ({ title, slug, icon }));
 ---
 
 <Layout title="Projects | Nighthawk Labs">
@@ -76,22 +80,25 @@ const projects: ProjectWithImages[] = await Promise.all(
     <ThemeToggle />
   </div>
 
-  <section class="section-container min-h-[35vh] flex items-end pt-24 md:pt-28">
-    <div class="showcase-header max-w-3xl">
-      <p class="mb-4 text-[11px] font-body uppercase tracking-[0.4em] text-accent">
-        Portfolio
-      </p>
-      <h1 class="font-heading text-4xl font-bold tracking-tight text-maintext md:text-6xl">
-        <span class="text-accent">/</span> Projects
-      </h1>
-      <p class="mt-5 max-w-2xl text-base leading-relaxed text-subtext md:text-lg">
-        A fuller view of professional work, published apps, learning projects, and experiments.
-      </p>
-    </div>
-  </section>
+  <ProjectsSideNav projects={projectNavItems} />
 
-  <div class="space-y-4 md:space-y-8">
-    {projects.map((project) => {
+  <div class="projects-page-content">
+    <section class="section-container min-h-[35vh] flex items-end pt-24 md:pt-28">
+      <div class="showcase-header max-w-3xl">
+        <p class="mb-4 text-[11px] font-body uppercase tracking-[0.4em] text-accent">
+          Portfolio
+        </p>
+        <h1 class="font-heading text-4xl font-bold tracking-tight text-maintext md:text-6xl">
+          <span class="text-accent">/</span> Projects
+        </h1>
+        <p class="mt-5 max-w-2xl text-base leading-relaxed text-subtext md:text-lg">
+          A fuller view of professional work, published apps, learning projects, and experiments.
+        </p>
+      </div>
+    </section>
+
+    <div class="space-y-4 md:space-y-8">
+      {projects.map((project) => {
       const hasImages = project.resolvedImages.length > 0;
       //const isReversed = index % 2 !== 0;
       const isReversed = false; // Disable alternating layout for now
@@ -280,7 +287,8 @@ const projects: ProjectWithImages[] = await Promise.all(
           </div>
         </section>
       );
-    })}
+      })}
+    </div>
   </div>
 </Layout>
 
@@ -307,6 +315,19 @@ const projects: ProjectWithImages[] = await Promise.all(
       order: 1;
     }
   }
+
+  @media (max-width: 639px) {
+    .projects-page-content {
+      padding-left: 2.75rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .projects-page-content {
+      padding-left: 5rem;
+    }
+  }
+
 </style>
 
 <script>

@@ -3,6 +3,7 @@
     "_sample": true,
     "title": "Sample Project",
     "slug": "sample-project",
+    "icon": "mdi:folder-star",
     "description": "Short card description used by the homepage Featured Projects cards.",
     "images": ["sample-project.webp"],
     "tech": ["Framework", "Language", "Tool"],
@@ -32,6 +33,7 @@
   {
     "title": "This Website",
     "slug": "nighthawk-labs-site",
+    "icon": "mdi:web",
     "description": "A high-performance, SEO-optimized web application built with modern frameworks to showcase my resume and portfolio.",
     "images": ["card-website.webp", "card-website-github.webp"],
     "tech": ["Astro", "Tailwind"],
@@ -61,6 +63,7 @@
   {
     "title": "Kube Pulse",
     "slug": "kube-pulse",
+    "icon": "mdi:kubernetes",
     "description": "A Go CLI that connects to a local Kubernetes cluster and summarizes workload health.",
     "images": ["card-kube-pulse-terminal.webp"],
     "tech": ["Kubernetes", "Docker", "Go"],
@@ -89,6 +92,7 @@
   {
     "title": "Home Bar",
     "slug": "homebar",
+    "icon": "mdi:glass-cocktail",
     "description": "Home Bar is a native Android cocktail app shaped through structured AI prompts, from feature buckets to testing and implementation reports.",
     "images": ["card-homebar.webp"],
     "tech": ["Prompt Engineering", "Kotlin", "Android"],
@@ -118,6 +122,7 @@
   {
     "title": "Agentikit",
     "slug": "agentikit",
+    "icon": "mdi:robot-outline",
     "description": "Agentikit is a reusable kit of AGENTS.md rules, workflow skills, and guidance docs for safer, clearer, coding-agent work across repositories.",
     "images": ["card-agentikit.webp"],
     "tech": ["Prompt Engineering", "Developer Tooling", "Workflow Design"],
