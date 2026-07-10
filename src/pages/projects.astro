@@ -76,7 +76,7 @@ const projects: ProjectWithImages[] = await Promise.all(
     <ThemeToggle />
   </div>
 
-  <section class="section-container min-h-[45vh] flex items-end pt-28 md:pt-36">
+  <section class="section-container min-h-[35vh] flex items-end pt-24 md:pt-28">
     <div class="showcase-header max-w-3xl">
       <p class="mb-4 text-[11px] font-body uppercase tracking-[0.4em] text-accent">
         Portfolio
@@ -90,7 +90,7 @@ const projects: ProjectWithImages[] = await Promise.all(
     </div>
   </section>
 
-  <div class="space-y-8 md:space-y-16">
+  <div class="space-y-4 md:space-y-8">
     {projects.map((project) => {
       const hasImages = project.resolvedImages.length > 0;
       //const isReversed = index % 2 !== 0;
@@ -103,7 +103,7 @@ const projects: ProjectWithImages[] = await Promise.all(
 
       return (
         <section
-          class="project-showcase-section section-container overflow-hidden"
+          class="project-showcase-section section-container overflow-hidden py-4 md:py-8"
         >
           <div id={project.slug} class={`project-layout scroll-mt-16 grid gap-8 rounded-2xl border border-accent/10 bg-accent/5 p-5 backdrop-blur-sm md:p-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12 ${isReversed ? 'is-reversed' : ''}`}>
             <div class="project-copy flex flex-col justify-center">
